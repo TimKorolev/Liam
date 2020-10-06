@@ -25,9 +25,9 @@ class LogoRender {
                     <path d="
                     M${ray.startPoint.x},${ray.startPoint.y + ray.startPoint.r} 
                     L${ray.endPoint.x},${ray.endPoint.y + ray.endPoint.r}
-                    C${bezierApexList[1].x},${bezierApexList[1].y + ray.endPoint.r} ${bezierApexList[1].x},${bezierApexList[1].y - ray.endPoint.r} ${ray.endPoint.x},${ray.endPoint.y - ray.endPoint.r} 
+                    C${bezierApexList[1]} ${bezierApexList[3]} ${ray.endPoint.x},${ray.endPoint.y - ray.endPoint.r} 
                     L${ray.startPoint.x},${ray.startPoint.y - ray.endPoint.r}
-                    C${bezierApexList[0].x},${bezierApexList[0].y - ray.startPoint.r} ${bezierApexList[0].x},${bezierApexList[0].y + ray.startPoint.r} ${ray.startPoint.x},${ray.startPoint.y + ray.startPoint.r} 
+                    C${bezierApexList[2]} ${bezierApexList[0]} ${ray.startPoint.x},${ray.startPoint.y + ray.startPoint.r} 
                     z" 
                     fill="url(#Gradient_${key})"/>
                 </g>"""
@@ -57,25 +57,59 @@ class LogoRender {
             file.writeText(fileContent)
         }
 
-        private fun getBezierApexList(startPoint: Point, endPoint: Point): List<BezierApex> {
-            val x1 = startPoint.x
-            val y1 = startPoint.y
-            val x2 = endPoint.x
-            val y2 = endPoint.y
+        private fun getBezierApexList(startPoint: Point, endPoint: Point): List<String> {
+
+            val x01 = startPoint.x
+            val y01 = startPoint.y
+            val x02 = endPoint.x
+            val y02 = endPoint.y
+
+            val isLeftPoint = x01 < x02
+
             val r1 = startPoint.r
             val r2 = endPoint.r
-            val k = (y1 - y2) / (x1 - x2)
 
-            val b = y1 - k * x1
+            val z = sqrt((x01 - x02).pow(2) + (y01 - y02).pow(2))
+            val cosA = (r2 - r1) / z
+            val x = sqrt(z.pow(2) - (r2 - r1).pow(2))
 
-            val D1 = 4 * (x1 - k * (b - y1)).pow(2) - 4 * (1 + k) * (x1.pow(2) - r1.pow(2) + (y1 - b).pow(2))
-            val xR1 = (x1 - k * (b - y1)) + sqrt(D1) / (1 + k)
-            val yR1 = k * xR1 + b
-            val D2 = 4 * (x2 - k * (b - y2)).pow(2) - 4 * (1 + k) * (x2.pow(2) - r2.pow(2) + (y2 - b).pow(2))
-            val xR2 = (x2 - k * (b - y2)) - sqrt(D2) / (1 + k)
-            val yR2 = k * xR2 + b
+            val xB11 = x01 - cosA * r2
+            val yB11 = y01 + (1 - cosA.pow(2)) * r2
+            val xB12 = x02 - (r1 / r2 * cosA * r2)
+            val yB12 = y02 + (1 - cosA.pow(2)) * r1
 
-            return listOf(BezierApex(xR1, yR1), BezierApex(xR2, yR2))
+            val xB21 = x01 + cosA * r2
+            val yB21 = y01 - (1 - cosA.pow(2)) * r2
+            val xB22 = x02 + (r1 / r2 * cosA * r2)
+            val yB22 = y02 - (1 - cosA.pow(2)) * r1
+
+            val k1 = (yB12 - yB11) / (xB12 - xB11)
+            val b1 = yB12 - k1 * xB12
+
+            val p1 = calcXY(xB11, yB11, k1, b1, r1, !isLeftPoint)
+            val p2 = calcXY(xB12, yB12, k1, b1, r2, isLeftPoint)
+
+            val k2 = (yB22 - yB21) / (xB22 - xB21)
+            val b2 = yB22 - k2 * xB22
+
+            val p3 = calcXY(xB21, yB21, k2, b2, r1, !isLeftPoint)
+            val p4 = calcXY(xB22, yB22, k2, b2, r2, isLeftPoint)
+
+            return listOf(p1, p2, p3, p4)
+        }
+
+        private fun calcXY(x: Double, y: Double, k: Double, b: Double, r: Double, isleftPoint: Boolean): String {
+            val A = 1 + k.pow(2)
+            val B = 2 * (-x + k * (b - y))
+            val C = x.pow(2) + (b - y).pow(2) - r.pow(2)
+            val D = B.pow(2) - 4 * A * C
+
+
+            val xC = if(isleftPoint) {(-B + sqrt(D)) / (2 * A)} else{(-B - sqrt(D)) / (2 * A)}
+
+            val yC = k * xC + b
+
+            return "$xC,$yC"
         }
     }
 }

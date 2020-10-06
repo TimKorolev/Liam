@@ -31,14 +31,14 @@ class RayListBuilder {
             val yPoint1: Double
             val rPoint1: Double
 
-            val xPoint2 = Random.nextDouble(0.0, 1000.0)
-            val yPoint2 = Random.nextDouble(0.0, 1000.0)
-            val rPoint2 = Random.nextDouble(30.0, 100.0)
+            val xPoint2 = Random.nextDouble(200.0, 800.0)
+            val yPoint2 = Random.nextDouble(200.0, 800.0)
+            val rPoint2 = Random.nextDouble(20.0, 50.0)
 
             if (previousEndPoint == null) {
-                xPoint1 = Random.nextDouble(0.0, 1000.0)
-                yPoint1 = Random.nextDouble(0.0, 1000.0)
-                rPoint1 = Random.nextDouble(30.0, 100.0)
+                xPoint1 = Random.nextDouble(200.0, 800.0)
+                yPoint1 = Random.nextDouble(200.0, 800.0)
+                rPoint1 = Random.nextDouble(20.0, 50.0)
             } else {
                 xPoint1 = previousEndPoint.x
                 yPoint1 = previousEndPoint.y
