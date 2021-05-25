@@ -32,7 +32,7 @@ class LogoRender {
                     fill="url(#Gradient_${key})"/>
                 </g>
                 """
-                defs += """<linearGradient id="Gradient222234567891011121314_${key}">
+                defs += """<linearGradient id="Gradient22223456789101112131415_${key}">
                     <stop offset="0" stop-color="${ray.startPoint.color.hex}"></stop>
                     <stop offset="1" stop-color="${ray.endPoint.color.hex}"></stop>
                     </linearGradient>"""
