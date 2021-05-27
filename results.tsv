@@ -1,5 +1,5 @@
 startTime	responseTime	sampleLabel	isSuccessful
-1613465646314	150	Notifications: Analyzer	1
-1613466501677	150	Inbox: Open All notifications	1
-1613466502056	150	Inbox: Open Reaction and Mention notifications	1
-1613466502104	105	Inbox: Open Subscription notifications	1
+1613465646314	300	Notifications: Analyzer	1
+1613466501677	300	Inbox: Open All notifications	1
+1613466502056	350	Inbox: Open Reaction and Mention notifications	1
+1613466502104	150	Inbox: Open Subscription notifications	1
