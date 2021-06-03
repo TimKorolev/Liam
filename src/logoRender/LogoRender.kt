@@ -33,7 +33,7 @@ class LogoRender {
                 </g>
                 """
                 defs += """<linearGradient id="Gradient_${key}">
-                    <stop offset="0" stop-color="${ray.startPoint.color.hex}"></stop>
+                    <stop offset="00" stop-color="${ray.startPoint.color.hex}"></stop>
                     <stop offset="1" stop-color="${ray.endPoint.color.hex}"></stop>
                     </linearGradient>"""
             }
